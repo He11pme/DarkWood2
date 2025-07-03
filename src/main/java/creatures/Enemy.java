@@ -1,4 +1,12 @@
-public abstract class Enemy extends Creature {
+package creatures;
+
+import engine.ListAttack;
+import engine.Weapon;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Enemy extends Fighter {
 
     private final int goldReward;
     private final int expReward;
@@ -11,9 +19,15 @@ public abstract class Enemy extends Creature {
         return expReward;
     }
 
-    public Enemy(String name, int health, int dex, int str, int goldReward, int expReward) {
-        super(name, health, dex, str);
+    public Enemy(String name, int maxHealth, int dex, int str, int maxActionPoints, Weapon weapon, int goldReward, int expReward) {
+        super(name, maxHealth, dex, str, maxActionPoints, weapon);
         this.goldReward = goldReward;
         this.expReward = expReward;
+        actionInFight = new ArrayList<>(List.of(ListAttack.BASIC));
     }
+
+//    @Override
+//    public String toString() {
+//        return getName() + ": HP = " + getHealth() + "/" + getMaxHealth();
+//    }
 }

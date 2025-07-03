@@ -1,0 +1,32 @@
+[
+    {
+      "type": "nextLocation",
+      "isUnlocked": true,
+      "text": "Вперед\n",
+      "action": "up"
+    },
+    {
+      "type": "nextLocation",
+      "isUnlocked": true,
+      "text": "Налево\n",
+      "action": "left"
+    },
+    {
+      "type": "nextLocation",
+      "isUnlocked": true,
+      "text": "Направо\n",
+      "action": "right"
+    },
+    {
+      "type": "nextLocation",
+      "isUnlocked": true,
+      "text": "Назад\n",
+      "action": "down"
+    },
+    {
+      "type": "nextLocation",
+      "isUnlocked": true,
+      "text": "Уйти из леса\n",
+      "action": "village"
+    }
+  ]

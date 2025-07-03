@@ -1,10 +1,19 @@
-import org.w3c.dom.Text;
+package creatures;
 
-public class Player extends Creature {
+import engine.Action;
+import engine.Attack;
+import engine.ListAttack;
+import engine.ListWeapon;
+import text_styler.TextFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player extends Fighter {
 
     private int gold = 10;
     private int exp = 0;
-    private int level = 1;
+
 
     public int getGold() {
         return gold;
@@ -14,17 +23,25 @@ public class Player extends Creature {
         return exp;
     }
 
-    public int getLevel() {
-        return level;
+    public Player(String name, int maxHealth, int dex, int str) {
+        super(name, maxHealth, dex, str, 2, ListWeapon.FISTS);
+        actionInFight = new ArrayList<>(List.of(ListAttack.BASIC, ListAttack.WHIRL, ListAttack.REND));
     }
 
-    public Player(String name, int health, int dex, int str) {
-        super(name, health, dex, str);
+    private boolean checkUpLevel() {
+        if (exp / 100 > level - 1) {
+            System.out.println(TextFormatter.of("Отдохните в деревне, чтобы повысить уровень.")
+                    .colorize(TextFormatter.GREEN));
+            return true;
+        }
+        return false;
     }
 
-    public void addExp(int i) {
-        exp += i;
-        checkUpLevel();
+    public void levelUp(int health, int str, int dex) {
+        level += 1;
+        this.maxHealth += (health + 2);
+        this.str += str;
+        this.dex += dex;
     }
 
     public void addGold(int amount) {
@@ -39,12 +56,27 @@ public class Player extends Creature {
         }
     }
 
-    private boolean checkUpLevel() {
-        if (exp / 100 > level - 1) {
-            System.out.println(TextStyler.colorize("Отдохните в деревне, чтобы повысить уровень.", TextStyler.YELLOW));
-            return true;
+    public void addExp(int amount) {
+        exp += amount;
+        checkUpLevel();
+    }
+
+    @Override
+    public List<Action> getActionInFight() {
+        List<Action> availableActions = new ArrayList<>();
+        for (Action action : actionInFight) {
+            if (action instanceof Attack attack) {
+                if (getStr() >= attack.getMinStr() && getDex() >= attack.getMinDex()) {
+                    availableActions.add(attack);
+                }
+            }
         }
-        return false;
+        return availableActions;
+    }
+
+    @Override
+    public String toString() {
+        return getName() + ": HP = " + getHealth() + "/" + getMaxHealth() + "; Action points = " + getActionPoints() + "; Str = " + getStr() + "; Dex = " + getDex() + "; Weapon: " + getWeapon().getName();
     }
 
 }

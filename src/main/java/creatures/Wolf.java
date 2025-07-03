@@ -1,3 +1,11 @@
+package creatures;
+
+import engine.Action;
+import engine.Attack;
+import engine.ListWeapon;
+
+import java.util.List;
+
 public class Wolf extends Enemy {
 
     private static final String NAME = "Wolf";
@@ -6,7 +14,7 @@ public class Wolf extends Enemy {
 
 
     public Wolf() {
-        super(NAME, HEALTH, DEX, STR, GOLD_REWARD, EXP_REWARD);
+        super(NAME, HEALTH, DEX, STR,2, ListWeapon.FANGS, GOLD_REWARD, EXP_REWARD);
     }
 
 }
