@@ -1,7 +1,7 @@
 package story.locations;
 
-import creatures.Fighter;
-import creatures.Player;
+import living.entity.CombatEntity;
+import living.entity.Player;
 import engine.Fight;
 import story.Manager;
 import text_styler.TextFormatter;
@@ -26,7 +26,7 @@ public class Location implements Manager {
         if (this instanceof OrdinaryForestLocation forestLocation) {
             if (!forestLocation.getEnemies().isEmpty()) {
                 if (new Fight(forestLocation.getEnemies(), player).startFight()) {
-                    if (forestLocation.getEnemies().stream().anyMatch(Fighter::isLive)) {
+                    if (forestLocation.getEnemies().stream().anyMatch(CombatEntity::isAlive)) {
                         System.out.println("Вы сбежали");
                         return locationNodes.getLast();
                     } else {

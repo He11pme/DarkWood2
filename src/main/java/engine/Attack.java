@@ -1,7 +1,7 @@
 package engine;
 
-import creatures.Enemy;
-import creatures.Fighter;
+import living.entity.Enemy;
+import living.entity.CombatEntity;
 import text_styler.TextFormatter;
 
 public class Attack extends Action {
@@ -16,7 +16,7 @@ public class Attack extends Action {
     private final static double CRIT_FACTOR = 1.5;
     private final static double DEX_FACTOR_CRIT = 3;
     private final static double DEX_FACTOR_MISS = 1.0;
-    private final static double STR_FACTOR = 3;
+    private final static double STR_FACTOR = 6;
     private final static double LEVEL_FACTOR_CRIT = 1;
     private final static double LEVEL_FACTOR_DAMAGE = 1;
     private final static double LEVEL_FACTOR_MISS = 0.1;
@@ -49,21 +49,21 @@ public class Attack extends Action {
         this.minDex = minDex;
     }
 
-    public void attack(Fighter attacker, Fighter opponent) {
+    public void attack(CombatEntity attacker, CombatEntity opponent) {
         boolean crit = getCrit(attacker, opponent);
         boolean miss = getMiss(attacker, opponent);
-        int blockDamage = opponent.getImproveBlock();
+        int blockDamage = opponent.getBlockDamageReduction();
         int damage = miss ? 0 : getDamage(crit, attacker, opponent);
         DataAttack dataAttack = new DataAttack(crit, miss, damage, blockDamage, attacker);
         opponent.takeDamage(damage - blockDamage);
         System.out.println(dataAttack);
     }
 
-    private boolean getCrit(Fighter attacker, Fighter opponent) {
+    private boolean getCrit(CombatEntity attacker, CombatEntity opponent) {
 
         double critChance =
                 baseCritChance
-                        + (attacker.getDex() - opponent.getDex()) * DEX_FACTOR_CRIT
+                        + (attacker.getAgility() - opponent.getAgility()) * DEX_FACTOR_CRIT
                         + attacker.getLevel() * LEVEL_FACTOR_CRIT;
 
         if (critChance > MAX_CRIT_CHANCE) critChance = MAX_CRIT_CHANCE;
@@ -71,20 +71,20 @@ public class Attack extends Action {
 
     }
 
-    private int getDamage(boolean crit, Fighter attacker, Fighter opponent) {
-        int damage = (int) (attacker.getWeapon().getPower() * attackFactor
-                + attacker.getStr() * STR_FACTOR
+    private int getDamage(boolean crit, CombatEntity attacker, CombatEntity opponent) {
+        int damage = (int) (attacker.getEquippedWeapon().getPower() * attackFactor
+                + attacker.getStrength() * STR_FACTOR
                 + (1 + (attacker.getLevel() - opponent.getLevel()) * LEVEL_FACTOR_DAMAGE));
 
         return crit ? (int) (damage * CRIT_FACTOR) : damage;
     }
 
-    private boolean getMiss(Fighter attacker, Fighter opponent) {
+    private boolean getMiss(CombatEntity attacker, CombatEntity opponent) {
 
         double missChance = baseMissChance
-                + (opponent.getDex() - attacker.getDex()) * DEX_FACTOR_MISS
+                + (opponent.getAgility() - attacker.getAgility()) * DEX_FACTOR_MISS
                 - attacker.getLevel() * LEVEL_FACTOR_MISS
-                + opponent.getImproveDodge();
+                + opponent.getDodgeChanceBonus();
 
         if (missChance > MAX_MISS_CHANCE) missChance = MAX_MISS_CHANCE;
         return Math.random() * 100 < missChance;
@@ -92,11 +92,11 @@ public class Attack extends Action {
     }
 
     @Override
-    public double getActionPoints(Fighter attacker) {
-        return attacker.getWeapon().getActionPoints() * actionPointsFactor;
+    public double getActionPoints(CombatEntity attacker) {
+        return attacker.getEquippedWeapon().getActionPoints() * actionPointsFactor;
     }
 
-    public record DataAttack(boolean crit, boolean miss, int damage, int blockDamage, Fighter attacker) {
+    public record DataAttack(boolean crit, boolean miss, int damage, int blockDamage, CombatEntity attacker) {
 
         @Override
         public String toString() {

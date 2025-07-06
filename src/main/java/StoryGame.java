@@ -1,7 +1,8 @@
 import com.fasterxml.jackson.core.type.TypeReference;
-import creatures.Merchant;
-import creatures.NPC;
-import creatures.Player;
+import engine.GameSession;
+import living.entity.Merchant;
+import living.entity.NPC;
+import living.entity.Player;
 import static story.dialogues.KeyResponse.*;
 
 import engine.ListPotion;
@@ -28,6 +29,7 @@ public class StoryGame {
     private void startStory() {
         headman.startDialogue();
         player = createPlayer();
+        GameSession.getInstance().setPlayer(player);
         LocationNode newNode = village.entranceToLocation(player);
         do {
             switch (newNode.getType()) {
@@ -49,7 +51,7 @@ public class StoryGame {
                 }
                 case "openDialogue" -> {
                     switch (newNode.getAction()) {
-                        case "alchemist" -> alchemist.startDialogue(player);
+                        case "alchemist" -> alchemist.startDialogue();
                     }
                     newNode = village.entranceToLocation(player);
                 }

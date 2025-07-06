@@ -2,8 +2,8 @@ package engine;
 
 public class ListDefence {
 
-    public final static Defence IMPROVE_BLOCK = new Defence("Приготовиться к блоку", "block", 3);
-    public final static Defence IMPROVE_DODGE = new Defence("Приготовиться к уклонению", "dodge", 10);
-    public final static Defence TRY_ESCAPE = new Defence("Попробовать сбежать", "escape", 0);
+    public final static Defense IMPROVE_BLOCK = new Defense("Приготовиться к блоку", "block", 3);
+    public final static Defense IMPROVE_DODGE = new Defense("Приготовиться к уклонению", "dodge", 10);
+    public final static Defense TRY_ESCAPE = new Defense("Попробовать сбежать", "escape", 0);
 
 }

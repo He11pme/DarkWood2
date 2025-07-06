@@ -1,6 +1,6 @@
 package engine;
 
-import creatures.Fighter;
+import living.entity.CombatEntity;
 
 public abstract class Action {
 
@@ -14,7 +14,7 @@ public abstract class Action {
         this.name = name;
     }
 
-    public abstract double getActionPoints(Fighter attacker);
+    public abstract double getActionPoints(CombatEntity attacker);
 
     @Override
     public String toString() {

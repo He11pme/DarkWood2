@@ -1,14 +1,13 @@
 package engine;
 
-import creatures.Enemy;
-import creatures.Fighter;
-import creatures.Player;
+import living.entity.Enemy;
+import living.entity.CombatEntity;
+import living.entity.Player;
 import text_styler.Reader;
 import text_styler.TextFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.*;
 
 public class Fight {
@@ -28,10 +27,10 @@ public class Fight {
         do {
 
             //Вывод списка врагов
-            List<Action> actionInFight = player.getActionInFight();
+            List<Action> actionInFight = player.getAvailableCombatActions();
 
             //Ход игрока
-            while (player.getActionPoints() > 0 && checkLiveEnemies()) {
+            while (player.getCurrentActionPoints() > 0 && checkLiveEnemies()) {
                 //Вывод данных об игроке
                 System.out.println(TextFormatter.of("\n" + player).colorize(TextFormatter.CYAN));
                 //Вывод возможных действий игрока
@@ -39,7 +38,7 @@ public class Fight {
                 //Запрос о номере действия
                 Action choseAction = actionInFight.get(Reader.readResponse(actionInFight.size()));
                 //Если действие требует больше очков действия чем есть
-                if (choseAction.getActionPoints(player) > player.getActionPoints()) {
+                if (choseAction.getActionPoints(player) > player.getCurrentActionPoints()) {
                     System.out.println(TextFormatter.of("Вам не хватает очков действий").colorize(TextFormatter.RED));
                     continue;
                 }
@@ -52,9 +51,9 @@ public class Fight {
                         choseAttack.attack(player, choseEnemy);
                     }
                     for (Enemy enemy : enemies) {
-                        if (!enemy.isLive() && !enemy.isLooted()) {
+                        if (!enemy.isAlive() && !enemy.isLooted()) {
                             player.addExp(enemy.getExpReward());
-                            player.addGold(enemy.getGoldReward());
+                            player.addGold(enemy.getLootGoldAmount());
                             enemy.setLooted(true);
                         }
                     }
@@ -63,20 +62,20 @@ public class Fight {
                     usePotion.usePotion(player);
                     player.useItem(usePotion.getPotion());
                     System.out.println(TextFormatter.of("\n" + player).colorize(TextFormatter.CYAN));
-                    actionInFight = player.getActionInFight();
-                } else if (choseAction instanceof Defence defence) {
-                    if (defence.getParameter().equals("escape")) {
+                    actionInFight = player.getAvailableCombatActions();
+                } else if (choseAction instanceof Defense defense) {
+                    if (defense.getParameter().equals("escape")) {
                         return true;
                     } else {
-                        defence.defence(player);
+                        defense.defense(player);
                     }
                 }
 
                 player.spendActionPoints(choseAction.getActionPoints(player));
             }
 
-            player.resetActionPoints();
-            for (Enemy enemy : enemies) enemy.resetImprove();
+            player.restoreActionPoints();
+            for (Enemy enemy : enemies) enemy.resetDefenseModifiers();
 
             //Ход противников
             long start = System.nanoTime();
@@ -84,11 +83,11 @@ public class Fight {
                 List<Future<?>> futures = new ArrayList<>();
 
                 for (Enemy enemy : enemies) {
-                    if (!enemy.isLive()) continue;
+                    if (!enemy.isAlive()) continue;
 
                     Future<?> future = service.submit(() -> {
-                        while (player.isLive() && enemy.getActionPoints() > 0) {
-                            Action choseAction = enemy.getActionInFight().get((int) (Math.random() * enemy.getActionInFight().size()));
+                        while (player.isAlive() && enemy.getCurrentActionPoints() > 0) {
+                            Action choseAction = enemy.getAllCombatActions().get((int) (Math.random() * enemy.getAllCombatActions().size()));
                             if (choseAction instanceof Attack choseAttack) {
                                 synchronized (player) {
                                     choseAttack.attack(enemy, player);
@@ -122,21 +121,21 @@ public class Fight {
             System.out.println("Время выполнения: " + duration + " наносекунд");
 
 
-            player.resetImprove();
-            for (Enemy enemy : enemies) enemy.resetActionPoints();
+            player.resetDefenseModifiers();
+            for (Enemy enemy : enemies) enemy.restoreActionPoints();
 
-        } while (checkLiveEnemies() && player.isLive());
+        } while (checkLiveEnemies() && player.isAlive());
 
-        return player.isLive();
+        return player.isAlive();
 
     }
 
     private Enemy getChoseEnemy() {
-        if (enemies.stream().filter(Fighter::isLive).count() > 1) {
+        if (enemies.stream().filter(CombatEntity::isAlive).count() > 1) {
             System.out.println("По кому вы хотите ударить?");
             do {
                 int index = Reader.readResponse(enemies.size());
-                if (enemies.get(index).isLive()) {
+                if (enemies.get(index).isAlive()) {
                     return enemies.get(index);
                 } else {
                     System.out.println(TextFormatter.of("В голове у " + player.getName() + " возникает мысль ударить [italic_on]ТРУП[italic_off], но он вовремя останавливается и меняет свой выбор.")
@@ -147,12 +146,12 @@ public class Fight {
         } else {
             //Ошибки при вызове .get() не должно быть.
             //Вызов данного метода производится только при наличии живых врагов.
-            return enemies.stream().filter(Fighter::isLive).findFirst().get();
+            return enemies.stream().filter(CombatEntity::isAlive).findFirst().get();
         }
     }
 
     private boolean checkLiveEnemies() {
-        return enemies.stream().anyMatch(Fighter::isLive);
+        return enemies.stream().anyMatch(CombatEntity::isAlive);
     }
 
     private void printListActions(List<Action> actionInFight) {
@@ -184,15 +183,6 @@ public class Fight {
         }
 
         return builder.toString();
-    }
-
-    private String toOrdinalWord(int i) {
-        return switch (i) {
-            case 1 -> "первому";
-            case 2 -> "второму";
-            case 3 -> "третьему";
-            default -> throw new IllegalArgumentException();
-        };
     }
 
 }

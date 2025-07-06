@@ -1,7 +1,5 @@
 package engine;
 
-import creatures.Fighter;
-
 public class Potion extends Item {
 
     private final String effect;    //buff or debuff

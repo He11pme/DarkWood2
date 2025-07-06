@@ -1,6 +1,6 @@
 package engine;
 
-import creatures.Fighter;
+import living.entity.CombatEntity;
 
 public class UsePotion extends Action{
 
@@ -16,13 +16,13 @@ public class UsePotion extends Action{
     }
 
     @Override
-    public double getActionPoints(Fighter attacker) {
+    public double getActionPoints(CombatEntity attacker) {
         return potion.getActionPoints();
     }
 
-    public void usePotion(Fighter user) {
+    public void usePotion(CombatEntity user) {
         switch (potion.getParameter()) {
-            case "HP" -> user.treatment(potion.getAmount());
+            case "HP" -> user.heal(potion.getAmount());
             case "str" -> {}
             case "dex" -> {}
         }

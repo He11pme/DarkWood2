@@ -1,7 +1,7 @@
 package story.locations;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import creatures.Player;
+import living.entity.Player;
 import story.ReadFile;
 
 public class Forest {

@@ -1,10 +1,10 @@
 package story.locations;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import creatures.Enemy;
-import creatures.Spider;
-import creatures.Wolf;
-import creatures.Zombie;
+import living.entity.Enemy;
+import living.entity.Spider;
+import living.entity.Wolf;
+import living.entity.Zombie;
 import story.ReadFile;
 
 import java.util.ArrayList;
