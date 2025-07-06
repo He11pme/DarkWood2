@@ -2,13 +2,12 @@ package story.dialogues;
 
 
 import story.Manager;
-import story.Node;
 import text_styler.TextFormatter;
 
+import java.util.Collections;
 import java.util.List;
 
-import static story.dialogues.KeyResponse.createPlayerResponse;
-import static story.dialogues.KeyResponse.keyResponse;
+import static story.dialogues.KeyResponse.*;
 
 public class ReadDialogue implements Manager {
 
@@ -32,6 +31,8 @@ public class ReadDialogue implements Manager {
                     keyResponse.put(dial.getId(), choice.getResponse());
                     switch (dial.getId()) {
                         case "career_choice" -> createPlayerResponse.put(dial.getId(), choice.getId());
+                        case "history_choice" -> {}
+                        default -> System.out.println(TextFormatter.of(dial.getSpeaker() + ": " +replacePlaceholders(choice.getResponse())).italicize().limitLengthLine());
                     }
                 }
             }
@@ -53,19 +54,24 @@ public class ReadDialogue implements Manager {
 
             //Открыть/закрыть выборы
             if (node.getNextNodes() != null) {
-                for (Node ch : dial.getAllNodes()) {
-                    if (ch.isUnlocked() || !ch.isUnlockable()) continue;
-                    for (String idNextNodes : node.getNextNodes()) {
-                        if (ch.getId().equals(idNextNodes)) {
-                            ch.unlocked();
-                            break;
-                        }
-                    }
+                for (DialogueNode ch : dial.getAllNodes()) {
+                    if (ch.isUnlocked()) continue;
+                    Collections.addAll(openNodes, node.getNextNodes());
                 }
             }
             node.locked();
 
-        } while (!node.getText().contains("[уйти]"));
+        } while (!node.getId().contains("exit"));
 
+    }
+
+    public String readHub(Dialogue dial) {
+        DialogueNode node;
+        System.out.print(replacePlaceholders(dial.toString()));
+        node = dial.getShowNodes().get(readResponse(dial.getShowNodes().size()));
+        System.out.println(TextFormatter.of(dial.getSpeaker() + ": " + replacePlaceholders(node.getResponse()))
+                .limitLengthLine()
+                .italicize());
+        return node.getAction();
     }
 }

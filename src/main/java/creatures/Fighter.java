@@ -16,6 +16,8 @@ public abstract class Fighter extends Creature{
     int level = 1;
     private boolean live = true;
     private Weapon weapon;
+    private int improveBlock = 0;
+    private int improveDodge = 0;
 
     List<Action> actionInFight;
 
@@ -59,6 +61,23 @@ public abstract class Fighter extends Creature{
         return actionInFight;
     }
 
+    public int getImproveDodge() {
+        return improveDodge;
+    }
+
+    public void setImproveDodge(int improveDodge) {
+        this.improveDodge = improveDodge;
+    }
+
+    public int getImproveBlock() {
+        return improveBlock;
+    }
+
+    public void setImproveBlock(int improveBlock) {
+        this.improveBlock = improveBlock;
+    }
+
+
     public Fighter(String name, int maxHealth, int dex, int str, int maxActionPoints, Weapon weapon) {
         super(name);
         this.maxHealth = maxHealth;
@@ -66,7 +85,7 @@ public abstract class Fighter extends Creature{
         this.dex = dex;
         this.str = str;
         this.maxActionPoints = maxActionPoints;
-        this.actionPoints = maxActionPoints;
+        this.actionPoints = getMaxActionPoints();
         this.weapon = weapon;
     }
 
@@ -78,11 +97,20 @@ public abstract class Fighter extends Creature{
         }
     }
 
+    public void treatment(int amount) {
+        health = Math.min(health + amount, maxHealth);
+    }
+
     public void spendActionPoints(double amount) {
         actionPoints -= amount;
     }
 
     public void resetActionPoints() {
         actionPoints = getMaxActionPoints();
+    }
+
+    public void resetImprove() {
+        improveBlock = 0;
+        improveDodge = 0;
     }
 }

@@ -11,11 +11,11 @@ import java.util.List;
 public class Spider extends Enemy {
 
     private static final String NAME = "Spider";
-    private static final int HEALTH = 100, DEX = 2, STR = 10;
-    private static final int GOLD_REWARD = 5, EXP_REWARD = 5;
+    private static final int HEALTH = 60, DEX = 7, STR = 2;
+    private static final int GOLD_REWARD = 5, EXP_REWARD = 200;
 
     public Spider() {
-        super(NAME, HEALTH, DEX, STR, 2, ListWeapon.CLAWS, GOLD_REWARD, EXP_REWARD);
+        super(NAME, HEALTH, DEX, STR, 1, ListWeapon.CLAWS, GOLD_REWARD, EXP_REWARD);
 
     }
 

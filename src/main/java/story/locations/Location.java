@@ -1,5 +1,8 @@
 package story.locations;
 
+import creatures.Fighter;
+import creatures.Player;
+import engine.Fight;
 import story.Manager;
 import text_styler.TextFormatter;
 
@@ -14,10 +17,28 @@ public class Location implements Manager {
     List<LocationNode> locationNodes;
     List<LocationNode> showLocationNodes = new ArrayList<>();
 
-    public LocationNode entranceToLocation() {
+    public void setFirstDescription(String firstDescription) {
+        this.firstDescription = firstDescription;
+    }
+
+    public LocationNode entranceToLocation(Player player) {
         System.out.println(getDescription());
-        printNodes();
-        return getNode();
+        if (this instanceof OrdinaryForestLocation forestLocation) {
+            if (!forestLocation.getEnemies().isEmpty()) {
+                if (new Fight(forestLocation.getEnemies(), player).startFight()) {
+                    if (forestLocation.getEnemies().stream().anyMatch(Fighter::isLive)) {
+                        System.out.println("Вы сбежали");
+                        return locationNodes.getLast();
+                    } else {
+                        System.out.println("Вы победили");
+                        printNodes();
+                    }
+                } else {
+                    System.out.println("Вы проиграли");
+                }
+            } else printNodes();
+        } else printNodes();
+        return showLocationNodes.get(readResponse(showLocationNodes.size()));
     }
 
     private String getDescription() {
@@ -52,9 +73,4 @@ public class Location implements Manager {
 
         System.out.println(builder);
     }
-
-    LocationNode getNode() {
-        return showLocationNodes.get(readResponse(showLocationNodes.size()));
-    }
-
 }

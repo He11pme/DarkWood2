@@ -43,7 +43,7 @@ public class Dialogue {
             int i = 0;
             showNodes.clear();
             for (DialogueNode dialogueNode : allNodes) {
-                if (dialogueNode.isUnlocked()) {
+                if ((dialogueNode.isUnlocked() || openNodes.contains(dialogueNode.getId())) && dialogueNode.isFirst()) {
                     showNodes.add(dialogueNode);
                     builder
                             .append(++i)

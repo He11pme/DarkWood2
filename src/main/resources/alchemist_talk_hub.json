@@ -1,0 +1,32 @@
+{
+  "id": "alchemist_talk",
+  "type": "cyclic_choice",
+  "speaker": "Морва",
+  "allNodes": [
+    {
+      "id": "alchemist_talk.buy_potion",
+      "isUnlocked": true,
+      "alwaysUnlocked": true,
+      "text": "[купить зелья]\n",
+      "action": "buy",
+      "response": "Вот! Всё что есть.\n"
+    },
+    {
+      "id": "alchemist_talk.meeting",
+      "isUnlocked": true,
+      "alwaysUnlocked": true,
+      "text": "Поговорить\n",
+      "action": "talk",
+      "response": "О чем ты хочешь поговорить?\n"
+    },
+    {
+      "id": "warden_talk.exit",
+      "isUnlocked": true,
+      "alwaysUnlocked": true,
+      "text": "[уйти]\n",
+      "action": "exit",
+      "response": "Прощай путник! Надеюсь лес не заберет тебя сегодня.\n"
+    }
+  ]
+}
+

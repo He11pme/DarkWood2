@@ -87,7 +87,4 @@ public class OrdinaryForestLocation extends Location {
         return result;
     }
 
-
-
-
 }

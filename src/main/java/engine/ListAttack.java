@@ -29,5 +29,4 @@ public class ListAttack {
             7,
             2);
 
-
 }

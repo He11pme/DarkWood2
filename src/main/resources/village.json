@@ -12,7 +12,7 @@
       "type": "openDialogue",
       "isUnlocked": true,
       "text": "Зайти к алхимику\n",
-      "action": "[описание входа к алхимику]"
+      "action": "alchemist"
     },
     {
       "type": "openDialogue",

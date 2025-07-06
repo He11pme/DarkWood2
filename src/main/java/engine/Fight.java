@@ -45,16 +45,38 @@ public class Fight {
                 }
                 //Если действие - атака
                 if (choseAction instanceof Attack choseAttack) {
-                    Enemy choseEnemy = getChoseEnemy();
-                    choseAttack.attack(player, choseEnemy);
-
+                    if (choseAttack.getName().equals("Мельница")) {
+                        for (Enemy enemy : enemies) choseAttack.attack(player, enemy);
+                    } else {
+                        Enemy choseEnemy = getChoseEnemy();
+                        choseAttack.attack(player, choseEnemy);
+                    }
+                    for (Enemy enemy : enemies) {
+                        if (!enemy.isLive() && !enemy.isLooted()) {
+                            player.addExp(enemy.getExpReward());
+                            player.addGold(enemy.getGoldReward());
+                            enemy.setLooted(true);
+                        }
+                    }
                     System.out.println(enemiesToString());
+                } else if (choseAction instanceof UsePotion usePotion) {
+                    usePotion.usePotion(player);
+                    player.useItem(usePotion.getPotion());
+                    System.out.println(TextFormatter.of("\n" + player).colorize(TextFormatter.CYAN));
+                    actionInFight = player.getActionInFight();
+                } else if (choseAction instanceof Defence defence) {
+                    if (defence.getParameter().equals("escape")) {
+                        return true;
+                    } else {
+                        defence.defence(player);
+                    }
                 }
 
                 player.spendActionPoints(choseAction.getActionPoints(player));
             }
 
             player.resetActionPoints();
+            for (Enemy enemy : enemies) enemy.resetImprove();
 
             //Ход противников
             long start = System.nanoTime();
@@ -100,7 +122,7 @@ public class Fight {
             System.out.println("Время выполнения: " + duration + " наносекунд");
 
 
-
+            player.resetImprove();
             for (Enemy enemy : enemies) enemy.resetActionPoints();
 
         } while (checkLiveEnemies() && player.isLive());

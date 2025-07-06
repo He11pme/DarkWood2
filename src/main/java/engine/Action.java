@@ -16,4 +16,8 @@ public abstract class Action {
 
     public abstract double getActionPoints(Fighter attacker);
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

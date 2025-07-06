@@ -5,7 +5,8 @@ public abstract class Node {
 
     private String id;
     private boolean isUnlocked;
-    private boolean isUnlockable;
+    private boolean isFirst = true;
+    private boolean alwaysUnlocked;
     private String text;
 
     public String getId() {
@@ -16,21 +17,20 @@ public abstract class Node {
         return isUnlocked;
     }
 
-    public boolean isUnlockable() {
-        return isUnlockable;
+    public boolean isFirst() {
+        return isFirst;
+    }
+
+    public boolean isAlwaysUnlocked() {
+        return alwaysUnlocked;
     }
 
     public String getText() {
         return text;
     }
 
-    public void unlocked() {
-        isUnlocked = true;
-        isUnlockable = false;
-    }
-
     public void locked() {
-        isUnlocked = false;
+        if (!isAlwaysUnlocked()) isFirst = false;
     }
 
 }

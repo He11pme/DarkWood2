@@ -1,16 +1,9 @@
 package engine;
 
-public class Weapon {
+public class Weapon extends Item {
 
-    private final String name;
     private final int power;
     private final int dex, str;
-    private final int cost;
-    private final double actionPoints;
-
-    public String getName() {
-        return name;
-    }
 
     public int getPower() {
         return power;
@@ -24,21 +17,11 @@ public class Weapon {
         return str;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
-    public double getActionPoints() {
-        return actionPoints;
-    }
-
-    public Weapon(String name, int power, int dex, int str, int cost, double actionPoints) {
-        this.name = name;
+    public Weapon(String name, int cost, double actionPoints, int power, int dex, int str) {
+        super(name, cost, actionPoints);
         this.power = power;
         this.dex = dex;
         this.str = str;
-        this.cost = cost;
-        this.actionPoints = actionPoints;
     }
 
 }

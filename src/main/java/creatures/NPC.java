@@ -13,6 +13,22 @@ public class NPC extends Creature {
     private final Dialogue generalDialogue;
     private final List<Dialogue> firstMeeting;
 
+    public boolean isFirstMeeting() {
+        return isFirstMeeting;
+    }
+
+    public void setFirstMeeting(boolean firstMeeting) {
+        isFirstMeeting = firstMeeting;
+    }
+
+    public Dialogue getGeneralDialogue() {
+        return generalDialogue;
+    }
+
+    public List<Dialogue> getFirstMeeting() {
+        return firstMeeting;
+    }
+
     public NPC(String name, String jsonFilePathGenDial, String jsonFilePathFirstMeeting) {
         super(name);
         generalDialogue = new ReadFile().getData(jsonFilePathGenDial, new TypeReference<>() {});

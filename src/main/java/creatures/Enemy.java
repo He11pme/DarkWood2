@@ -10,6 +10,7 @@ public abstract class Enemy extends Fighter {
 
     private final int goldReward;
     private final int expReward;
+    private boolean isLooted = false;
 
     public int getGoldReward() {
         return goldReward;
@@ -19,6 +20,14 @@ public abstract class Enemy extends Fighter {
         return expReward;
     }
 
+    public boolean isLooted() {
+        return isLooted;
+    }
+
+    public void setLooted(boolean looted) {
+        isLooted = looted;
+    }
+
     public Enemy(String name, int maxHealth, int dex, int str, int maxActionPoints, Weapon weapon, int goldReward, int expReward) {
         super(name, maxHealth, dex, str, maxActionPoints, weapon);
         this.goldReward = goldReward;
@@ -26,8 +35,8 @@ public abstract class Enemy extends Fighter {
         actionInFight = new ArrayList<>(List.of(ListAttack.BASIC));
     }
 
-//    @Override
-//    public String toString() {
-//        return getName() + ": HP = " + getHealth() + "/" + getMaxHealth();
-//    }
+    @Override
+    public String toString() {
+        return getName() + ": HP = " + getHealth() + "/" + getMaxHealth();
+    }
 }

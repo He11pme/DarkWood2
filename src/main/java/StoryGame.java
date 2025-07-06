@@ -1,20 +1,20 @@
 import com.fasterxml.jackson.core.type.TypeReference;
+import creatures.Merchant;
 import creatures.NPC;
 import creatures.Player;
 import static story.dialogues.KeyResponse.*;
 
-import engine.ListWeapon;
+import engine.ListPotion;
 import story.ReadFile;
 import story.locations.Forest;
 import story.locations.Location;
 import story.locations.LocationNode;
-import text_styler.TextFormatter;
 
 public class StoryGame {
 
-    Player player = new Player("Ivan", 500, 4, 1);
+    Player player;
     NPC headman = new NPC("Фьор", "warden_talk", "intro");
-//    NPC alchemist = new NPC("Морва", 200, 10, 2, "alchemist_talk");
+    Merchant alchemist = new Merchant ("Морва", "alchemist_talk_gen_dial", "alchemist_talk_first_meeting", "alchemist_talk_hub", ListPotion.itemsOfAlchemist);
 
     Location village = new ReadFile().getData("village", new TypeReference<>() {});
     Forest forest = new Forest();
@@ -28,20 +28,39 @@ public class StoryGame {
     private void startStory() {
         headman.startDialogue();
         player = createPlayer();
-        LocationNode newNode = village.entranceToLocation();
+        LocationNode newNode = village.entranceToLocation(player);
         do {
             switch (newNode.getType()) {
                 case "nextLocation" -> {
                     switch (newNode.getAction()) {
-                        case "forest", "up", "left", "right", "down" -> newNode = forest.entranceForest(player);
-                        case "village" -> newNode = village.entranceToLocation();
+                        case "forest" -> {
+                            if (forest.isInFirstForest()) {
+                                forest.setInFirstForest(false);
+                                forest.reset();
+                                newNode = forest.entranceForest(player);
+                            } else {
+                                System.out.println("Вы устали и хотите отдохнуть. В лес вы не пойдете.");
+                                newNode = village.entranceToLocation(player);
+                            }
+                        }
+                        case "up", "left", "right", "down" -> newNode = forest.entranceForest(player);
+                        case "village" -> newNode = village.entranceToLocation(player);
                     }
                 }
                 case "openDialogue" -> {
-
+                    switch (newNode.getAction()) {
+                        case "alchemist" -> alchemist.startDialogue(player);
+                    }
+                    newNode = village.entranceToLocation(player);
                 }
                 case "actionInLocation" -> {
-
+                    switch (newNode.getAction()) {
+                        case "next_day" -> {
+                            player.levelUp();
+                            forest.setInFirstForest(true);
+                            newNode = village.entranceToLocation(player);
+                        }
+                    }
                 }
             }
         } while (!newNode.getAction().equals("exitGame"));
@@ -52,10 +71,10 @@ public class StoryGame {
         String name = createPlayerResponse.get("name");
         Player player;
         switch (createPlayerResponse.get("career_choice")) {
-            case "strength" -> player = new Player(name, 500, 2, 7);
-            case "dexterity" -> player = new Player(name, 10, 4, 2);
-            case "health" -> player = new Player(name, 40, 2, 1);
-            default -> player = new Player(name, 10, 1, 1);
+            case "strength" -> player = new Player(name, 120, 1, 4);
+            case "dexterity" -> player = new Player(name, 100, 7, 2);
+            case "health" -> player = new Player(name, 140, 2, 1);
+            default -> player = new Player(name, 100, 1, 1);
         }
         return player;
     }

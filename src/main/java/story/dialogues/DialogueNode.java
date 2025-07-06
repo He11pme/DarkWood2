@@ -7,6 +7,7 @@ public class DialogueNode extends Node {
 
     private String response;
     private String[] nextNodes;
+    private String action;
 
     public String getResponse() {
         return response;
@@ -14,6 +15,10 @@ public class DialogueNode extends Node {
 
     public String[] getNextNodes() {
         return nextNodes;
+    }
+
+    public String getAction() {
+        return action;
     }
 
     @Override

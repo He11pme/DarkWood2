@@ -1,0 +1,65 @@
+{
+  "id": "alchemist_talk",
+  "type": "cyclic_choice",
+  "speaker": "Морва",
+  "allNodes": [
+    {
+      "id": "alchemist_talk.meeting",
+      "isUnlocked": true,
+      "text": "Прости, я не представился. Меня {username} зовут.\n",
+      "response": "Ничего страшного. Такие как ты долго у нас не задерживаются.\n"
+    },
+    {
+      "id": "warden_talk.about_blacksmith",
+      "isUnlocked": true,
+      "text": "Что ты можешь рассказать о кузнеце?\n",
+      "response": "Горнир? Да какой из него кузнец. Только подковы умеет ковать, да топоры деревенские.\n",
+      "nextNodes": [
+        "warden_talk.about_witch"
+      ]
+    },
+    {
+      "id": "alchemist_talk.about_curse",
+      "isUnlocked": true,
+      "text": "Что ты знаешь о проклятии?\n",
+      "response": "\n",
+      "nextNodes": [
+        "warden_talk.sorcerer",
+        "warden_talk.about_witch",
+        "warden_talk.about_stone"
+      ]
+    },
+    {
+      "id": "alchemist_talk.sorcerer",
+      "isUnlocked": false,
+      "text": "Может ты еще что-нибудь знаешь об Азарионе?\n",
+      "response": "[italic_on]Щурится, будто оценивая тебя.[italic_off] Азардон, вроде его звали. Жил в башне, в лесу. Делал, что хотел, пока не сгинул. А может так и живет в этой башне. Можешь алхимика расспросить про него.\n"
+    },
+    {
+      "id": "alchemist_talk.about_witch",
+      "isUnlocked": false,
+      "text": "Расскажи о ведьме.\n",
+      "response": "Лилит, говорят, сожгли ее. Кто-то говорит за дело, кто-то зря. [italic_on]Усмехается.[italic_off] Мертвые не жалуются мне, так что можешь не расспрашивать.\n"
+    },
+    {
+      "id": "alchemist_talk.about_stone",
+      "isUnlocked": false,
+      "text": "Считаешь что камень в лесу - причина всех бед?\n",
+      "response": "Может и его? Мне почем знать. Стоит где-то в чаще. Шепчет. Ступай, послушай.\n"
+    },
+    {
+      "id": "alchemist_talk.leave_village",
+      "isUnlocked": true,
+      "text": "Почему из деревни никто не уходит?\n",
+      "response": "Лицо старика искривляется в ухмылке. Лес не отпускает. Уйдешь — вернешься. Или пропадешь.\n"
+    },
+    {
+      "id": "alchemist_talk.exit",
+      "isUnlocked": true,
+      "alwaysUnlocked": true,
+      "text": "[Назад]\n",
+      "response": "Желаешь чего-нибудь еще?\n"
+    }
+  ]
+}
+

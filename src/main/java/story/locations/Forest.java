@@ -1,39 +1,33 @@
 package story.locations;
 
-import creatures.Enemy;
+import com.fasterxml.jackson.core.type.TypeReference;
 import creatures.Player;
-import engine.Fight;
-
-import java.util.List;
+import story.ReadFile;
 
 public class Forest {
 
     private OrdinaryForestLocation[][] mapForest = new OrdinaryForestLocation[11][11];
     private OrdinaryForestLocation currentLocation;
+    private String[] descriptionForestLocation;
+    private boolean inFirstForest = true;
 
     public Forest() {
-        for (int i = 0; i < mapForest.length; i++) {
-            for (int j = 0; j < mapForest[i].length; j++) {
-                mapForest[i][j] = new OrdinaryForestLocation(i, j);
-            }
-        }
+        descriptionForestLocation = new ReadFile().getData("description_forest_location", new TypeReference<>() {});
+        fillForest();
         currentLocation = mapForest[0][5];
     }
 
+    public boolean isInFirstForest() {
+        return inFirstForest;
+    }
+
+    public void setInFirstForest(boolean inFirstForest) {
+        this.inFirstForest = inFirstForest;
+    }
+
     public LocationNode entranceForest(Player player) {
+        LocationNode currentNode = currentLocation.entranceToLocation(player);
 
-        if (!currentLocation.getEnemies().isEmpty()) {
-            if (new Fight(currentLocation.getEnemies(), player).startFight()) {
-                System.out.println("Вы победили");
-                currentLocation.printNodes();
-            } else {
-                System.out.println("Вы проиграли");
-            }
-        } else currentLocation.printNodes();
-
-
-
-        LocationNode currentNode = currentLocation.getNode();
         switch (currentNode.getAction()) {
             case "up" -> currentLocation = mapForest[currentLocation.getLine() + 1][currentLocation.getColumn()];
             case "left" -> currentLocation = mapForest[currentLocation.getLine()][currentLocation.getColumn() - 1];
@@ -45,7 +39,18 @@ public class Forest {
         return currentNode;
     }
 
+    public void reset() {
+        fillForest();
+        currentLocation = mapForest[0][5];
+    }
 
-
-
+    private void fillForest() {
+        for (int i = 0; i < mapForest.length; i++) {
+            for (int j = 0; j < mapForest[i].length; j++) {
+                OrdinaryForestLocation forestLocation = new OrdinaryForestLocation(i, j);
+                forestLocation.setFirstDescription(descriptionForestLocation[(int) (Math.random() * descriptionForestLocation.length)]);
+                mapForest[i][j] = forestLocation;
+            }
+        }
+    }
 }
